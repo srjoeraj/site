@@ -1,0 +1,134 @@
+.top-container{
+    background-color:#002b36 ;
+    position: relative;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    
+}
+
+body{
+    background-color:#eee8d5 ;
+    color: #586e75;
+    margin:0;
+    text-align:center;
+    font-family: 'Merriweather', serif;
+}
+
+h1 {
+    font-family: 'Major Mono Display', monospace;
+    font-size: 5em;
+    color:	#b58900;
+}
+
+.coverh2{
+    color: #cb4b16	;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h2{
+    font-family: 'Roboto Condensed', sans-serif;
+    color:#cb4b16;
+}
+h3{
+    font-family: 'Roboto Condensed', sans-serif;
+    color:#b58900;
+}
+
+.profile-pic {
+    width: 25%;
+}
+
+.middle-container{
+    margin:100px auto 100px auto;
+}
+
+.skill-row {
+    width: 50%;
+    margin: 100px auto 100px auto;
+    text-align:left;
+    line-height: 2;
+}
+
+
+.left-image {
+    width: 25%;
+    float: left;
+    padding-right: 30px;
+}
+
+.right-image {
+    width: 25%;
+    float: right;
+    padding-right: 30px;
+}
+
+hr {
+
+    border: none;
+    border-top: 10px dotted #002b36;
+    width: 5%;
+    margin:100px auto 100px auto;
+
+}
+
+.intro {
+  width: 60%;
+  margin: auto;
+}
+
+.btn {
+  background: #11cdd4;
+  background-image: -webkit-linear-gradient(top, #11cdd4, #11999e);
+  background-image: -moz-linear-gradient(top, #11cdd4, #11999e);
+  background-image: -ms-linear-gradient(top, #11cdd4, #11999e);
+  background-image: -o-linear-gradient(top, #11cdd4, #11999e);
+  background-image: linear-gradient(to bottom, #11cdd4, #11999e);
+  -webkit-border-radius: 8;
+  -moz-border-radius: 8;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #30e3cb;
+  background-image: -webkit-linear-gradient(top, #30e3cb, #2bc4ad);
+  background-image: -moz-linear-gradient(top, #30e3cb, #2bc4ad);
+  background-image: -ms-linear-gradient(top, #30e3cb, #2bc4ad);
+  background-image: -o-linear-gradient(top, #30e3cb, #2bc4ad);
+  background-image: linear-gradient(to bottom, #30e3cb, #2bc4ad);
+  text-decoration: none;
+}
+
+.contact-p{
+
+    padding-bottom: 5rem;
+    
+    width: 60%;
+    margin: auto;
+
+}
+
+.another-h3{
+    margin: 4rem auto 4rem auto;
+}
+
+.bottom-container{
+    background-color: #002b36;
+
+    position: relative;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
+
+a{
+    padding: 0 20px 0 20px;
+    color: #b58900;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
