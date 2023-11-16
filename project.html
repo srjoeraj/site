@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+
+<title>Sample Linux Note</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content=" Subtitle">
+
+<link rel="stylesheet" type="text/css" media="screen" href="Narangi.css" />
+<link rel="alternate" type="application/atom+xml" title="Recent blog posts" href="/rss.xml">
+
+</head>
+
+<body>
+<header>
+<h1>Sample Linux Note </h1>  
+</header>
+<article>
+<h1>Linux File Permissions</h1>
+
+<ul>
+<li><strong>File permissions</strong> (file modes) specify who can access, change or execute a file on a Linux System.</li>
+<li>It ensures that only authorized users and processes can access files and directories.</li>
+<li><strong>Each file or directory has an owner and a group. By default, the owner is the user who creates the file and the group is the primary group of that user.</strong></li>
+<li>The ownership of a file or a directory can be changed only by root using the <code>chown</code> and <code>chgrp</code> commands.</li>
+</ul>
+
+<p>For each file the permissions are assigned to three different categories of users:
+1. The file owner.
+2. The group owner.
+3. Others (anyone else or the whole world)</p>
+
+<p>There are three file permissions types that apply to each category:
+- The read permission =&gt; <code>r</code>
+- The write permission =&gt; <code>w</code>
+- The execute permission =&gt; <code>x</code></p>
+
+<ul>
+<li><strong>The file permissions are for all users except root (for non priv users).</strong></li>
+</ul>
+
+<p><img src="images/fp01.png" alt="File permissions" /></p>
+
+<h1>The Octal Notation for File Permissions</h1>
+
+<ul>
+<li>The <strong>number</strong> that represents the permission in base-8 can be either a 3 or a 4-digit number with digit from 0 to 7. The leading (0) can be omitted.</li>
+<li>0755 = 755 and 0644 = 644.</li>
+<li><p><strong>When a 3 digit number is used, the first digit represents the permissions of the file's owner, the second one the file's group, and the last one the permissions of the others class.</strong></p></li>
+<li><p><code>r</code>, <code>w</code>, <code>x</code> have their own fixed number value:</p>
+
+<ul>
+<li><strong>r</strong> (read) =&gt; <strong>4</strong></li>
+<li><strong>w</strong> (write) =&gt; <strong>2</strong></li>
+<li><strong>x</strong> (execute) =&gt; <strong>1</strong></li>
+<li><strong>-</strong> (no permissions) =&gt; <strong>0</strong></li>
+</ul></li>
+</ul>
+
+<h1>Changing File Permissions <code>chmod</code></h1>
+
+<ul>
+<li><p><code>chmod</code> is the command used to change the permissions of a file or a directory using either the symbolic or the numeric notation.</p></li>
+<li><p>Only the root, or the file's owner can change the file's permissions.</p></li>
+<li><p>Syntax: <code>chmod [who][OPERATION][PERMISSIONS] filename</code></p></li>
+<li><p><strong>who</strong> signifies the user category whose permissions will be changed.</p>
+
+<ul>
+<li><strong>u</strong> =&gt; the <strong>user</strong> that owns the file.</li>
+<li><strong>g</strong> =&gt; the <strong>group</strong> that the file belongs to.</li>
+<li><strong>o</strong> =&gt; the other users.</li>
+</ul></li>
+<li><p>The <strong>OPERATION</strong> flags define whether the permissions are to be removed, added, or set:</p>
+
+<ul>
+<li><code>-</code>: a hyphen means remove the specified permissions.</li>
+<li><code>+</code>: the plus sign means Add the specified permissions.</li>
+<li><code>=</code>: equals means change the current permissions to the specified permissions.</li>
+</ul></li>
+<li><p>The <strong>permissions</strong> are specified using the letters <strong>r</strong>,<strong>w</strong>, and <strong>x</strong>.</p></li>
+<li><p>Examples</p>
+
+<p>srjoeraj@ubuntu:~$ who &gt; a.txt
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-rw-rw-r-- 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod g-rw a.txt 
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-rw----r-- 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p></li>
+</ul>
+
+<p>srjoeraj@ubuntu:~$ chmod o=rwx,g+x a.txt 
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-rw---xrwx 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod ugo= a.txt
+srjoeraj@ubuntu:~$ ls -l a.txt 
+---------- 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod ug=rx a.txt
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-r-xr-x--- 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod -v u-x,g+w,o=xw a.txt 
+mode of 'a.txt' changed from 0550 (r-xr-x---) to 0473 (r--rwx-wx)
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-r--rwx-wx 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod 777 a.txt 
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-rwxrwxrwx 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod 007 a.txt
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-------rwx 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod 731 a.txt
+srjoeraj@ubuntu:~$ ls -l a.txt
+-rwx-wx--x 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod 500 a.txt
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-r-x------ 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ chmod 700 a.txt
+srjoeraj@ubuntu:~$ ls -al a.txt 
+-rwx------ 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt
+```</p>
+
+<h1>The Effect of Permissions on Directories</h1>
+
+<h1>Combining <code>find</code> and <code>chmod</code> Commands Together:</h1>
+
+<ul>
+<li>for files:
+```bash
+srjoeraj@ubuntu:~$ sudo find ~/Desktop/ -type f  -exec chmod 770 {} \;</li>
+</ul>
+
+<p>```</p>
+
+<ul>
+<li>for directories:
+```bash
+srjoeraj@ubuntu:~$ sudo find ~/Desktop/ -type d  -exec chmod 770 {} \;</li>
+</ul>
+
+<p>```</p>
+
+<h1>Changing File Ownership <code>chown</code>, <code>chgrp</code></h1>
+
+<ul>
+<li>In Linux, all files are associated with an owner and a group owner.</li>
+<li>The <code>chown</code> and <code>chgrp</code> commands are used to change the files owner and group.</li>
+<li><strong>Only root can change file owner.</strong></li>
+<li>Normal users can change the group of the file only fi they own the file and only to a group of which they are a member of. root can change the group ownership of all files.</li>
+</ul>
+
+<h2><code>chown</code></h2>
+
+<p>```bash
+srjoeraj@ubuntu:~$ lspci &gt; cpu.txt
+srjoeraj@ubuntu:~$ ls -l cpu.txt
+-rw-rw-r-- 1 srjoeraj srjoeraj 2883 Oct 28 01:49 cpu.txt</p>
+
+<p>srjoeraj@ubuntu:~$ tail -n 2 /etc/passwd
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+test:x:1001:1001::/home/test:/bin/sh</p>
+
+<p>srjoeraj@ubuntu:~$ chown test
+chown: missing operand after ‘test’
+Try 'chown --help' for more information.</p>
+
+<p>srjoeraj@ubuntu:~$ chown test cpu.txt 
+chown: changing ownership of 'cpu.txt': Operation not permitted</p>
+
+<p>srjoeraj@ubuntu:~$ sudo chown test cpu.txt
+srjoeraj@ubuntu:~$ ls -l cpu.txt 
+-rw-rw-r-- 1 test srjoeraj 2883 Oct 28 01:49 cpu.txt</p>
+
+<p>srjoeraj@ubuntu:~$ sudo chown test a.txt error.txt errors.txt </p>
+
+<p><code>
+- Using UID instead of useraname:
+</code>bash
+srjoeraj@ubuntu:~$ cat /etc/passwd | grep "test"
+test:x:1001:1001::/home/test:/bin/sh</p>
+
+<p>srjoeraj@ubuntu:~$ sudo chown 1001 file1.txt
+srjoeraj@ubuntu:~$ ls -l 
+total 76
+-rwx------ 1 test     srjoeraj   44 Oct 27 22:59 a.txt
+drwxrwxr-x 2 srjoeraj srjoeraj 4096 Oct 26 22:33 backup
+-rw-rw-r-- 1 test     srjoeraj 2883 Oct 28 01:49 cpu.txt
+lrwxrwxrwx 1 srjoeraj srjoeraj    5 Oct 27 02:03 c.txt -> b.txt
+drwxr-xr-x 5 srjoeraj srjoeraj 4096 Oct 21 02:30 Desktop
+drwxrwxr-x 2 srjoeraj srjoeraj 4096 Oct 21 03:34 dir
+drwxr-xr-x 4 srjoeraj srjoeraj 4096 Oct 23 04:54 Documents
+drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 21 01:51 Downloads
+-rw-rw-r-- 1 test     srjoeraj    0 Oct 21 06:12 errors.txt
+-rw-rw-r-- 1 test     srjoeraj   36 Oct 21 06:13 error.txt
+-rw-rw-r-- 1 srjoeraj srjoeraj 2213 Oct 21 05:54 etc.txt
+-rw-rw-r-- 1 test     srjoeraj   44 Oct 21 06:35 file1.txt
+-rw-rw-r-- 1 srjoeraj srjoeraj   44 Oct 21 06:35 file2.txt
+-rw-rw-r-- 1 srjoeraj srjoeraj  289 Oct 21 06:32 inet.txt
+-rw-rw-r-- 1 srjoeraj srjoeraj   35 Oct 21 05:52 ls.txt
+drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Music
+-rw-rw-r-- 1 srjoeraj srjoeraj  194 Oct 21 06:17 output.txt
+drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Pictures
+drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Public
+drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Templates
+drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Videos</p>
+
+<p>```</p>
+
+<ul>
+<li><code>chgrp</code> </li>
+</ul>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chgrp sudo cpu.txt</p>
+
+<p>``<code>
+- Alternatively the</code>chown` can also be used to do the above:</p>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chown :sudo errors.txt 
+srjoeraj@ubuntu:~$ ls -l cpu.txt errors.txt 
+-rw-rw-r-- 1 test sudo 2883 Oct 28 01:49 cpu.txt
+-rw-rw-r-- 1 test sudo    0 Oct 21 06:12 errors.txt</p>
+
+<p>```</p>
+
+<ul>
+<li>Changing permissions for all file in directory <code>-R</code></li>
+</ul>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chown -R srjoeraj:srjoeraj ~/</p>
+
+<p>srjoeraj@ubuntu:~$ ls -li
+total 76
+262466 -rwx------ 1 srjoeraj srjoeraj   44 Oct 27 22:59 a.txt
+525167 drwxrwxr-x 2 srjoeraj srjoeraj 4096 Oct 26 22:33 backup
+262683 -rw-rw-r-- 1 srjoeraj srjoeraj 2883 Oct 28 01:49 cpu.txt
+262685 lrwxrwxrwx 1 srjoeraj srjoeraj    5 Oct 27 02:03 c.txt -> b.txt
+525090 drwxr-xr-x 5 srjoeraj srjoeraj 4096 Oct 21 02:30 Desktop
+525164 drwxrwxr-x 2 srjoeraj srjoeraj 4096 Oct 21 03:34 dir
+525129 drwxr-xr-x 4 srjoeraj srjoeraj 4096 Oct 23 04:54 Documents
+525091 drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 21 01:51 Downloads
+262689 -rw-rw-r-- 1 srjoeraj srjoeraj    0 Oct 21 06:12 errors.txt
+262684 -rw-rw-r-- 1 srjoeraj srjoeraj   36 Oct 21 06:13 error.txt
+262682 -rw-rw-r-- 1 srjoeraj srjoeraj 2213 Oct 21 05:54 etc.txt
+262694 -rw-rw-r-- 1 srjoeraj srjoeraj   44 Oct 21 06:35 file1.txt
+262695 -rw-rw-r-- 1 srjoeraj srjoeraj   44 Oct 21 06:35 file2.txt
+262693 -rw-rw-r-- 1 srjoeraj srjoeraj  289 Oct 21 06:32 inet.txt
+262692 -rw-rw-r-- 1 srjoeraj srjoeraj   35 Oct 21 05:52 ls.txt
+525130 drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Music
+262686 -rw-rw-r-- 1 srjoeraj srjoeraj  194 Oct 21 06:17 output.txt
+525131 drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Pictures
+525110 drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Public
+525092 drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Templates
+525132 drwxr-xr-x 2 srjoeraj srjoeraj 4096 Oct 18 03:02 Videos</p>
+
+<p>```</p>
+
+<h1>Understanding SUID (Set User ID)</h1>
+
+<ul>
+<li>Besides <code>r</code>,<code>w</code>,<code>x</code> for the owner, group and others there are 3 extra permissions for each file or directory: <strong>SUID</strong> or Set User ID, <strong>SGID</strong> or Set Group ID and <strong>Sticky Bit</strong>.</li>
+<li>These special permissions are for a file or directory overall, not just for a user category.</li>
+<li><strong>When an executable file with SUID is executed then the resulting process will have the permissions of the owner of the command, not the permissions of the user who executes the command.</strong></li>
+</ul>
+
+<h2>Setting SUID</h2>
+
+<ul>
+<li>Relative mode</li>
+</ul>
+
+<p><code>bash
+srjoeraj@ubuntu:~$ sudo chmod u+s a.txt
+[sudo] password for srjoeraj: 
+srjoeraj@ubuntu:~$ ls -l a.txt 
+-rws------ 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt
+</code></p>
+
+<ul>
+<li>Absolute mode <code>chmod 4XXX file</code>. Creating a SUID on the <code>cat</code> command found at <code>/usr/bin/cat</code> and then printing the <code>/etc/shadow</code> without sudo.</li>
+</ul>
+
+<p>```bash
+srjoeraj@ubuntu:~$ which cat
+/usr/bin/cat</p>
+
+<p>srjoeraj@ubuntu:~$ ls /usr/bin/cat -l
+-rwxr-xr-x 1 root root 43416 Sep  5  2019 /usr/bin/cat</p>
+
+<p>srjoeraj@ubuntu:~$ sudo chmod 4755 /usr/bin/cat</p>
+
+<p>srjoeraj@ubuntu:~$ ls -l /usr/bin/cat
+-rwsr-xr-x 1 root root 43416 Sep  5  2019 /usr/bin/cat</p>
+
+<p>srjoeraj@ubuntu:~$ cat /etc/passwd | tail -n 2
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+test:x:1001:1001::/home/test:/bin/sh</p>
+
+<p>```</p>
+
+<ul>
+<li>If you remove the execute permission from a file that has a SUID, then the <code>s</code> will be replaced by a <code>S</code>.</li>
+</ul>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chmod u-x a.txt </p>
+
+<p>srjoeraj@ubuntu:~$ ls -li a.txt 
+262466 -rwS------ 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>```</p>
+
+<h2>Removing SUID form a file</h2>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chmod u-s a.txt
+srjoeraj@ubuntu:~$ ls -li a.txt
+262466 -rw------- 1 srjoeraj srjoeraj 44 Oct 27 22:59 a.txt</p>
+
+<p>```</p>
+
+<h2>Finding all files that have an SUID using <code>find</code></h2>
+
+<p>```bash
+srjoeraj@ubuntu:~$ find /usr/bin -perm -4000
+/usr/bin/su
+/usr/bin/vmware-user-suid-wrapper
+/usr/bin/fusermount
+/usr/bin/chfn
+/usr/bin/sudo
+/usr/bin/gpasswd
+/usr/bin/mount
+/usr/bin/umount
+/usr/bin/cat
+/usr/bin/newgrp
+/usr/bin/chsh
+/usr/bin/pkexec
+/usr/bin/passwd</p>
+
+<p>```</p>
+
+<h1>Setting SGID (Set User ID)</h1>
+
+<ul>
+<li><strong>SGID</strong> is set mainly to directories.</li>
+<li><p>If you set SGID on directories, all files or directories created inside that directory will be owned by the same gorup owner of the directory wher SGID was configured.</p></li>
+<li><p>This is useful creating shared directories, which are directories that are writable at the group level.</p></li>
+<li><p>The letter <code>s</code> is present instead of <code>x</code> in the group section of the permission.</p></li>
+</ul>
+
+<h2>Setting SGID:</h2>
+
+<ul>
+<li>Relative mode:</li>
+</ul>
+
+<p><code>bash
+$  sudo chmod g+s directory
+</code></p>
+
+<ul>
+<li>Absolute mode:</li>
+</ul>
+
+<p><code>bash
+$ sudo chmod 2770 direcotory
+</code></p>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chmod g+s hello
+[sudo] password for srjoeraj: </p>
+
+<p>srjoeraj@ubuntu:~$ ls -ld hello
+drwxrwsr-x 2 srjoeraj srjoeraj 4096 Oct 28 02:59 hello</p>
+
+<p>```</p>
+
+<h1>Understanding the Sticky Bit</h1>
+
+<ul>
+<li>The <strong>Sticky Bit</strong> is applied to directories.</li>
+<li>A user may only delete files that he owns or for which he has explicit write permisssion granted, even when he ahs write access to the directory.</li>
+<li>The sticky bit allows you to create a directory that everyone can use as a shared file storage. The files are protected because, no can delete anyone else files.</li>
+</ul>
+
+<h2>Setting Sticky Bit</h2>
+
+<p><code>bash
+$ chmod 1XXX directory
+$ chmod o+t directory
+</code></p>
+
+<p>```bash
+root@ubuntu:/home/srjoeraj# chmod o+t /temp
+root@ubuntu:/home/srjoeraj# ls -ld /temp
+drwxrwxrwt 2 root root 4096 Oct 28 03:07 /temp</p>
+
+<p>root@ubuntu:/home/srjoeraj# chmod 1777 /temp 
+root@ubuntu:/home/srjoeraj# ls -ld
+drwxr-xr-x 18 srjoeraj srjoeraj 4096 Oct 28 02:59 .</p>
+
+<p>```</p>
+
+<h1>Umask</h1>
+
+<ul>
+<li>The user file-creation mode mask (umask) is use to determine the file permission for newly created files.</li>
+<li>Default umask value is <code>0002</code> (unpriv user) and for root it is <code>0022</code></li>
+</ul>
+
+<p><code>bash
+srjoeraj@ubuntu:~$ umask
+0002
+</code></p>
+
+<p><code>bash
+root@ubuntu:/home/srjoeraj# umask
+0022
+</code></p>
+
+<h2>Changing Umask value</h2>
+
+<p><code>bash
+srjoeraj@ubuntu:~$ umask 0022
+srjoeraj@ubuntu:~$ umask
+0022
+</code></p>
+
+<ul>
+<li>This change however is not permanent. To make it permanent append <code>umask 0022</code> to <code>~/.bashrc</code>.</li>
+</ul>
+
+<p><img src="images/fp02.png" alt="Umask Calculation" /></p>
+
+<h1>Understanding File Attributes <code>lsattr</code> and <code>chattr</code></h1>
+
+<ul>
+<li><code>lsattr</code> displays all file attributes:</li>
+</ul>
+
+<p><code>bash
+srjoeraj@ubuntu:~$ lsattr
+--------------e----- ./cpu.txt
+--------------e----- ./ls.txt
+--------------e----- ./Public
+--------------e----- ./errors.txt
+--------------e----- ./inet.txt
+--------------e----- ./dir
+--------------e----- ./error.txt
+--------------e----- ./linux
+--------------e----- ./backup
+--------------e----- ./Desktop
+--------------e----- ./a.txt
+--------------e----- ./Videos
+--------------e----- ./hello
+--------------e----- ./Documents
+--------------e----- ./Music
+--------------e----- ./Templates
+--------------e----- ./file2.txt
+--------------e----- ./Downloads
+--------------e----- ./Pictures
+--------------e----- ./file1.txt
+--------------e----- ./etc.txt
+--------------e----- ./output.txt
+</code></p>
+
+<ul>
+<li><code>chattr</code> changes file attributes. Most of the attributes can only be changed by root.</li>
+</ul>
+
+<ol>
+<li>To make the file append only. This can only run by root.</li>
+</ol>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chattr +a cpu.txt 
+[sudo] password for srjoeraj: </p>
+
+<p>srjoeraj@ubuntu:~$ echo "hello" &gt; cpu.txt 
+bash: cpu.txt: Operation not permitted</p>
+
+<p>srjoeraj@ubuntu:~$ echo "hello this text was appended" &gt;&gt; cpu.txt</p>
+
+<p>srjoeraj@ubuntu:~$ cat cpu.txt
+00:00.0 Host bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX Host bridge (rev 01)
+00:01.0 PCI bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX AGP bridge (rev 01)
+00:07.0 ISA bridge: Intel Corporation 82371AB/EB/MB PIIX4 ISA (rev 08)
+00:07.1 IDE interface: Intel Corporation 82371AB/EB/MB PIIX4 IDE (rev 01)
+00:07.3 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 08)
+00:07.7 System peripheral: VMware Virtual Machine Communication Interface (rev 10)
+00:0f.0 VGA compatible controller: VMware SVGA II Adapter
+00:10.0 SCSI storage controller: Broadcom / LSI 53c1030 PCI-X Fusion-MPT Dual Ultra320 SCSI (rev 01)
+00:11.0 PCI bridge: VMware PCI bridge (rev 02)
+00:15.0 PCI bridge: VMware PCI Express Root Port (rev 01)
+00:15.1 PCI bridge: VMware PCI Express Root Port (rev 01)
+02:05.0 SATA controller: VMware SATA AHCI controller
+hello this text was appended</p>
+
+<p>srjoeraj@ubuntu:~$ lsattr cpu.txt 
+-----a--------e----- cpu.txt
+```</p>
+
+<ol start="2">
+<li><p>To ensure that the access time of the file is not update <code>+A</code>. This can be run by both the user and root.
+<code>bash
+srjoeraj@ubuntu:~$ stat cpu.txt 
+ File: cpu.txt
+ Size: 4           Blocks: 8          IO Block: 4096   regular file
+Device: 805h/2053d  Inode: 262683      Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/srjoeraj)   Gid: ( 1000/srjoeraj)
+Access: 2021-10-28 03:38:13.430853757 -0700
+Modify: 2021-10-28 03:43:02.836599694 -0700
+Change: 2021-10-28 03:43:02.836599694 -0700
+Birth: -
+srjoeraj@ubuntu:~$ chattr +A cpu.txt
+srjoeraj@ubuntu:~$ lsattr cpu.txt 
+-------A------e----- cpu.txt
+srjoeraj@ubuntu:~$ cat cpu.txt 
+cpu
+srjoeraj@ubuntu:~$ stat cpu.txt
+ File: cpu.txt
+ Size: 4           Blocks: 8          IO Block: 4096   regular file
+Device: 805h/2053d  Inode: 262683      Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/srjoeraj)   Gid: ( 1000/srjoeraj)
+Access: 2021-10-28 03:38:13.430853757 -0700
+Modify: 2021-10-28 03:43:02.836599694 -0700
+Change: 2021-10-28 03:44:36.181306848 -0700
+Birth: -
+</code></p></li>
+<li><p>The immutable attribute <code>+i</code>. The file cannot be modified even by root. Root access req though.
+```bash
+srjoeraj@ubuntu:~$ sudo chattr +i a.txt </p></li>
+</ol>
+
+<p>srjoeraj@ubuntu:~$ lsattr a.txt 
+----i---------e----- a.txt</p>
+
+<p>srjoeraj@ubuntu:~$ rm a.txt 
+rm: cannot remove 'a.txt': Operation not permitted</p>
+
+<p>srjoeraj@ubuntu:~$ sudo rm a.txt 
+rm: cannot remove 'a.txt': Operation not permitted</p>
+
+<p>srjoeraj@ubuntu:~$ ln a.txt b.txt
+ln: failed to create hard link 'b.txt' =&gt; 'a.txt': Operation not permitted</p>
+
+<p>```</p>
+
+<ol start="4">
+<li>To remove an attribute from a file.
+```bash
+srjoeraj@ubuntu:~$ sudo chattr -a cpu.txt 
+srjoeraj@ubuntu:~$ lsattr cpu.txt 
+--------------e----- cpu.txt</li>
+</ol>
+
+<p>```</p>
+
+<ul>
+<li><code>chattr -R</code> to run the commands recursively:</li>
+</ul>
+
+<p>```bash
+srjoeraj@ubuntu:~$ sudo chattr -R +i linux/</p>
+
+<p>srjoeraj@ubuntu:~$ lsattr linux/
+----i---------e----- linux/bye.txt
+----i---------e----- linux/hello.txt</p>
+
+<p>```</p>
+
+ 
+<p># Last updated on <time>12 Nov 2023.</time></p>
+
+</article>
+<footer>
+<p>Questions or comments? You can contact me <a href="/">here</a>.
+<br>
+{ <a href="/">homepage</a> } { <a href="/">linkedin</a> } { <a href="/">git</a> } { <a href="/">privacy</a> }</p>
+
+</footer>
+</body>
+</html>
+            

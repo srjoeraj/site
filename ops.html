@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+
+<title>Ops Note</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content=" Testing in progress">
+
+<link rel="stylesheet" type="text/css" media="screen" href="Narangi.css" />
+<link rel="alternate" type="application/atom+xml" title="Recent blog posts" href="/rss.xml">
+
+</head>
+
+<body>
+<header>
+<h1>Ops Note </h1>  
+</header>
+<article>
+<blockquote>
+  <p>I'm greatfull, truly.</p>
+</blockquote>
+
+<ol>
+<li>Installing, enable and starting apache on email server.</li>
+</ol>
+
+<p>```
+[root@email rrajguru]# yum install -y httpd
+Loaded plugins: extras<em>suggestions, langpacks, priorities, update-motd
+Package httpd-2.4.54-1.amzn2.x86</em>64 already installed and latest version
+Nothing to do</p>
+
+<p>[root@email rrajguru]# systemctl enable httpd
+Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+[root@email rrajguru]# systemctl start httpd</p>
+
+<p>[root@email rrajguru]# systemctl enable httpd
+Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+[root@email rrajguru]# systemctl start httpd</p>
+
+<p>```</p>
+
+<ol start="2">
+<li>Allow inbound traffic to email sever via port 80 (emailsg).</li>
+<li>Check whether default apache web page comes at <strong>email.rrajguru.ops345.ca.</strong></li>
+4. 
+</ol>
+
+<p>```
+[root@email rrajguru]# rm -f /var/www
+rm: cannot remove ‘/var/www’: Is a directory
+[root@email rrajguru]# rm -rf /var/www
+[root@email rrajguru]# cd /var
+[root@email var]# ls
+account  adm  cache  db  empty  games  gopher  kerberos  lib  local  lock  log  mail  nis  opt  preserve  run  spool  tmp  yp
+[root@email var]# ln -s /home/www/ /var/www
+[root@email var]# ls
+account  adm  cache  db  empty  games  gopher  kerberos  lib  local  lock  log  mail  nis  opt  preserve  run  spool  tmp  www  yp
+[root@email var]# touch /home/rrajguru/www/index.php
+[root@email var]# ls /var/www
+index.php
+[root@email var]# vim /home/rrajguru/www/index.php </p>
+
+<p>```
+ This note is a guide to install arch Linux flavoured with dwm.</p>
+
+<h2>Create bootable disk</h2>
+
+<pre><code>lsblk
+dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/disk/by-id/usb-My_flash_drive conv=fsync oflag=direct status=progress
+</code></pre>
+
+<h2>Connect to internet</h2>
+
+<pre><code>iwctl   :   For wifi connection.
+station device get-networks
+iwctl --passphrase passphrase station device connect SSID
+</code></pre>
+
+<h2>Clear/Format disk</h2>
+
+<pre><code>fdisk /dev/sda
+g create new gpt label
+p print the partition table
+n create a new partition
+d delete a partition
+q quit without saving changes
+w write the new partition table and exit
+</code></pre>
+
+<h2>Format disk type</h2>
+
+<pre><code>mkfs.fat -F32   /dev/sda1
+mkfs.ext4   /dev/sda2
+</code></pre>
+
+<h2>Mounting and file Structure</h2>
+
+<pre><code>mount /dev/sda2 /mnt
+mkdir -p /mnt/{home,data,etc}
+mount /dev/sdb1 /mnt/data
+</code></pre>
+
+<h2>Basic setup</h2>
+
+<pre><code>genfstab -U -p /mnt &gt;&gt; /mnt/etc/fstab
+
+pacstrap -i /mnt base
+
+arch-chroot /mnt
+</code></pre>
+
+<h2>Install some software</h2>
+
+<p>I use linux-lts instead of linux. If you prefer linux, then replace linux-lts with linux.</p>
+
+<pre><code>pacman -S linux-lts linux-lts-headers base-devel linux-firmware vim networkmanager wpa_supplicant wireless_tools netctl dialog nvidia-lts nvidia-utils grub efibootmgr os-prober mtools dosfstools intel-ucode xorg-server xorg neofetch pulseaudio pamixer termite dolphin git vlc vifm i3
+</code></pre>
+
+<h2>System Settings</h2>
+
+<p>Setup time </p>
+
+<pre><code>ln -sf /usr/share/zoneinfo/Asia/Kolkata &gt; /etc/localtime
+hwclock --systohc
+</code></pre>
+
+<p>Setup language</p>
+
+<pre><code>vim /etc/locale.gen
+locale-gen
+vim /etc/locale.conf
+LANG=en_US.UTF-8
+</code></pre>
+
+<p>Initiate linux
+    mkinitcpio -p linux-lts</p>
+
+<h2>User addition</h2>
+
+<pre><code>useradd -m -g users -G wheel myusername
+passwd
+passwd myusername
+</code></pre>
+
+<p>Enable users as admin</p>
+
+<pre><code>visudo
+enable wheels
+</code></pre>
+
+<h2>Install Grub</h2>
+
+<pre><code>GRUB UEFI
+mkdir /boot/efi
+mount /dev/sda1 /boot/efi
+grub-install --target=x86_64-efi --bootloader-id=grub --recheck
+ls -lart /boot/grub/locale/en*mo
+cp /usr/share/locale/en@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo
+
+grub-mkconfig -o /boot/grub/grub.cfg
+</code></pre>
+
+<h2>Optional Swap file</h2>
+
+<pre><code>swapfile
+
+fallocate -l 2G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+echo "/swapfile none swap sw 0 0' | tee -a /etc/fstab
+</code></pre>
+
+<h2>Hostname and host</h2>
+
+<pre><code>vim /etc/hostname
+mySystemName
+
+vim /etc/hosts
+127.0.0.1   localhost
+::1     localhost
+127.0.1.1   mySystemName.localdomain    mySystemName
+</code></pre>
+
+<h2>Enable network</h2>
+
+<pre><code>systemctl enable NetworkManager
+</code></pre>
+
+<h2>Reboot</h2>
+
+<h2>After installation</h2>
+
+<pre><code>nmcli device wifi list
+nmcli device wifi connect SSID password "password"
+
+vim /etc/pacman.d/conf
+enable multilib
+ILoveCandy
+
+git clone https://aur.archlinux.org/yay.git
+yay git
+makepkg -si
+Install additional software
+
+yay -S brave optimus-manager optimus-manager-qt code zsh vim vi unzip zsh-you-should-use zsh-syntax-highlighting wget pamixer libreoffice-still youtube-dl opusfile opus-tools libopusenc opus cmus openssh
+Vim Plug
+
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+nvim .config/nvim/init.vim
+PlugInstall
+Install FiraCode
+</code></pre>
+
+<p>Download Firacode.zip from google
+mkdir /usr/share/fonts/firacode</p>
+
+<pre><code>sudo systemctl edit getty@tty1.service
+Paste below
+[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin username --noclear %I $TERM
+Type=idle
+Grub config
+
+vi /etc/default/grub
+GRUB_TIMEOUT=0
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+sudo timedatectl set-timezone Asia/Kolkata
+
+/usr/share/themes -&gt; Material-Black-/usr/share/themes lxappearance
+
+rclone
+rclone sync your_folder cloud:your_folder
+</code></pre>
+
+ 
+<p># Last updated on <time>14 Nov 2023.</time></p>
+
+</article>
+<footer>
+<p>Questions or comments? You can contact me <a href="/">here</a>.
+<br>
+{ <a href="/">homepage</a> } { <a href="/">linkedin</a> } { <a href="/">git</a> } { <a href="/">privacy</a> }</p>
+
+</footer>
+</body>
+</html>
+            
